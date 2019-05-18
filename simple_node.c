@@ -9,7 +9,7 @@ struct node {
 	void 		*data ;
 	void		*meta_data ;
 	struct node 	**children ;
-	size_t 		children_count ;
+	size_t 		child_count ;
 	size_t		children_capacity ;
 	void		(*kill_self)(struct node **) ;
 	struct node     *(*create_child)(void * args) ;
@@ -21,7 +21,6 @@ struct node {
 void kill_self(struct node ** node) {
 	if (node && *node) {
 		node_kill_all_children(*node) ;
-		if ((*node)->children) free((*node)->children) ;
 		if ((*node)->data) free((*node)->data) ;
 		if ((*node)->meta_data) free((*node)->meta_data) ;
 
@@ -32,37 +31,34 @@ void kill_self(struct node ** node) {
 
 bool push_child(struct node * parent, struct node * child) {
 	bool success_code = true ;
-	struct node ** temp ;
+	struct node * temp ;
 
 	VALIDATE_NODE("simple_node:push_child") ;
 	/* case: no child passed to function */
 	if (!child) {
 		success_code = false ;
 	}
+
 	/* case: parent has no children yet */
-	else if (!parent->children) {
-		parent->children_capacity = DEFAULT_SIMPLE_NODE_CHILD_CAPACITY ;
-		parent->children = (struct node **)malloc(
-			sizeof(struct node *) * parent->children_capacity) ;
-		if (!parent->children) success_code = false ;
-		parent->children_count = 0 ;
+	if (success_code && !parent->first_child) {
+		parent->first_child = parent->last_child = child ;
+		child->brother = child->sister = parent->first_child ;
 	}
-	else {
-		if (parent->children_count >= parent->children_capacity) {
-			parent->children_capacity *= 2 ;
-			temp = (struct node **)realloc(parent->children,
-				sizeof(struct node *) * parent->children_capacity) ;
-			if (!temp) {
-				success_code = false ;
-			}
-			else {
-				parent->children = temp ;
-			}
-		}
+	/* case: parent already has one or more children */
+	else if (success_code) {
+		/* the linking of the list */
+		parent->last_child->brother = child ;
+		child->sister = parent->last_child ;
+		child->brother = parent->first_child ;
+		parent->first_child->sister = child ;
+		
+		/* newly linked, now inserted */
+		temp = parent->last_child ;
+		parent->last_child = child ;
 	}
 
 	if(success_code) {
-		parent->children[parent->children_count++] = child ;
+		++parent->child_count ;
 	}
 
 	return success_code ;
@@ -83,8 +79,9 @@ struct node * simple_node_create(void * args) {
 	if (!new->data) { free(new) ; free(new->meta_data) ; return NULL ; } ;
 	*(int *)(new->meta_data) = 0 ;
 
-	new->children = NULL ;
-	new->children_count = 0 ;
+	new->first_child = new->last_child =
+		new->brother = new->sister = NULL ;
+	new->child_count = 0 ;
 
 	new->kill_self = kill_self ;
 	new->create_child = simple_node_create ;
