@@ -25,7 +25,7 @@ udid_t udid_generate(void) {
 	return new ;
 }
 
-int	udid_compare	(udid_t first, udid_t second) {
+int udid_compare(udid_t first, udid_t second) {
 	// TODO
 	(void)first, (void)second ;
 	return true ;

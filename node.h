@@ -23,6 +23,14 @@ typedef union metadata {
 	long long	data ;
 } metadata_t ;
 
+typedef struct node_data_ops {
+	void 		*(*get_bytes)(struct node *) ;
+	size_t		(*get_length)(struct node *) ;
+	bool		(*get_string)(struct node *, char * buf, size_t buflen) ;
+	bool		(*set_data)(struct node *, void * data) ;
+	void		(*free_data)(void *) ;
+} data_ops_t ;
+
 /* Creation functions will be specified for each node specializaiton,
  * but they all must know how to kill themselves and reproduce
  */
@@ -30,6 +38,7 @@ struct node {
 	udid_t 		udid ;
 	void 		*data ;
 	metadata_t 	metadata ;
+	data_ops_t	ops ;
 
 	struct node 	*first_child ;
 	struct node 	*last_child ;
@@ -39,7 +48,6 @@ struct node {
 	size_t 		child_count ;
 
 	void		(*kill_self)(struct node **) ;
-	void		(*free_data)(void *) ;
 	struct node     *(*create_child)(void * args) ;
 } ;
 
@@ -72,6 +80,8 @@ inline void node_print_child_linkage(struct node * node, FILE * file) {
 		child = child->brother ;
 	}
 }
+
+inline void node_kill(struct node ** node) ;
 
 inline bool node_kill_child(struct node * parent, size_t child_index, size_t body_count_limit) {
 	size_t counter = 0, body_count = 0 ;
@@ -156,7 +166,7 @@ inline bool node_kill_all_children(struct node * parent) {
 inline void node_kill(struct node ** node) {
 	if (node && *node) {
 		node_kill_all_children(*node) ;
-		if ((*node)->data) (*node)->free_data((*node)->data) ;
+		if ((*node)->data) (*node)->ops.free_data((*node)->data) ;
 		free(*node) ;
 		*node = NULL ;
 	}
@@ -273,6 +283,10 @@ inline bool node_create_child(struct node * parent, void * args) {
 	}
 
 	return success_code ;
+}
+
+inline bool node_has_parent(struct node * node) {
+	return node->parent != NULL ;
 }
 
 #endif /* NODE_H */
