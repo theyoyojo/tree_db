@@ -29,7 +29,7 @@ typedef struct node_data_ops {
 	bool		(*get_string)(struct node *, char * buf, size_t buflen) ;
 	bool		(*set_data)(struct node *, void * data) ;
 	void		(*free_data)(void *) ;
-	bool 		(*compare_data)(void * first, void * second) ;
+	int 		(*compare_data)(void * first, void * second) ;
 } data_ops_t ;
 
 /* Creation functions will be specified for each node specializaiton,

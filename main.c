@@ -205,6 +205,28 @@ TEST_SET(simple_node_tests,
 
 		node_kill(&test) ;
 	) ;
+	TEST_CASE(compare,
+		struct node * test = simple_node_create(NULL), *first, *second ;
+		node_create_child(test, NULL) ;
+		node_create_child(test, NULL) ;
+		first = node_get_child_by_index(test, 0) ;
+		second = node_get_child_by_index(test, 1) ;
+
+		ASSERT(first->data_ops.compare_data(first->data,second->data) == 0) ;
+
+		simple_node_set_data(first, 4) ;
+		simple_node_set_data(second, 3) ;
+		ASSERT(first->data_ops.compare_data(first->data,second->data) == 1) ;
+
+		simple_node_set_data(first, 1) ;
+
+		ASSERT(first->data_ops.compare_data(first->data,second->data) == -2) ;
+		simple_node_set_data(second, 1) ;
+
+		ASSERT(first->data_ops.compare_data(first->data,second->data) == 0) ;
+
+		node_kill(&test) ;
+	) ;
 ) ;
 
 TEST_SET(data_node_basic_and_none,
@@ -232,7 +254,8 @@ TEST_SET(data_node_basic_and_none,
 	) ;
 	TEST_CASE(data_is_zero,
 		struct node * test = data_node_create_none() ;
-		ASSERT(!test->data_ops.compare_data(test->data_ops.get_bytes(test), (void *)&CONST_NONE)) ;
+		ASSERT(test->data_ops.compare_data(
+			test->data_ops.get_bytes(test), (void *)&CONST_NONE) == 0) ;
 		node_kill(&test) ;
 	) ;
 	TEST_CASE(size_is_correct,

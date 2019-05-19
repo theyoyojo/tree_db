@@ -23,4 +23,4 @@ bool data_type_none_set_data(struct node * node, void * data) ;
 
 void data_type_none_free_data(void * data) ;
 
-bool data_type_none_compare(void * first, void * second) ;
+int data_type_none_compare(void * first, void * second) ;

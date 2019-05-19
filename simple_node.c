@@ -45,6 +45,8 @@ struct node * simple_node_create(void * args) {
 				{ if (!data) return false ;
 				*(int*)new->data = *(int*)data ; return true ;}),
 		.free_data = free,
+		.compare_data = LAMBDA(int,(void * first, void * second)
+				{ return *(int *)first - *(int *)second ; }),
 	} ;
 
 	new->parent = NULL ;
