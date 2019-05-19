@@ -10,8 +10,8 @@ typedef struct creation_arg {
 
 struct node * data_node_create(void * args) ;
 
-void data_node_kill(struct node ** node) ;
+struct node * data_node_create_none(void) ;
 
-void data_node_print_type(struct node ** node) ;
+void data_node_print_type(struct node * node) ;
 
 #endif /* DATA_NODE_H */

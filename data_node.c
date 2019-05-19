@@ -2,10 +2,6 @@
 #include "data_type_none.h"
 #include "udid.h"
 
-void data_node_kill(struct node ** node) {
-	node_kill(node) ;
-}
-
 struct node * data_node_create(void * args) {
 	creation_arg_t * creation_args = (creation_arg_t *)args ;
 
@@ -30,7 +26,15 @@ struct node * data_node_create(void * args) {
 	return new ;
 }
 
-void data_node_print_type(struct node ** node) {
-	(void)node ;
-	// TODO 	
+struct node * data_node_create_none(void) {
+	return data_node_create((void *)&NONE_ARGS) ;
 }
+
+#define SMALL_BUFLEN 64
+void data_node_print_type(struct node * node) {
+	(void)node ;
+	char buf[SMALL_BUFLEN] ;
+	node->data_ops.get_string(node, buf, sizeof(buf)) ;
+	printf("%s\n", buf) ;
+}
+

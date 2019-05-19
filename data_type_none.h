@@ -1,45 +1,26 @@
 #include "data_node.h"
 #include <string.h>
 
-const char data_type_none_string[] = "[NONE]" ;
+typedef unsigned long long int none_t ;
 
-const unsigned long long int data_type_none_bytes = 0 ;
+/* constants */
+const creation_arg_t NONE_ARGS ;
+const data_ops_t data_type_none_ops ;
 
-const size_t data_type_none_length = sizeof(unsigned long long int) ;
+const none_t CONST_NONE ;
 
-void * data_type_none_get_bytes(struct node * node) {
-	(void)node ;
-	return (void *)&data_type_none_length ;
-}
+/* data manipulaton functons */
+void * data_type_none_get_bytes(struct node * node) ;
 
-size_t data_type_none_get_length(struct node * node) {
-	(void)node ;
-	return data_type_none_length ;
-}
+size_t data_type_none_get_length(struct node * node) ;
 
-bool data_type_none_get_string(struct node * node, char * buf, size_t buflen) {
-	(void)node ;
-	strncpy(buf, data_type_none_string, buflen) ;
-	return strcmp(buf, data_type_none_string) == 0 ;
-}
+bool data_type_none_get_string(struct node * node, char * buf, size_t buflen) ;
 
-bool data_type_none_set_data(struct node * node, void * data) {
-	/* this data type is immutable */
-	(void)node, (void)data ;
-	return false ;
-}
+char * data_type_none_get_string_ptr(void) ;
+size_t data_type_none_get_string_length(void) ;
 
-void data_type_none_free_data(void * data) {
-	/* there is nothing to free for this type */
-	(void)data ;
-	return ;
-}
+bool data_type_none_set_data(struct node * node, void * data) ;
 
-const data_ops_t data_type_none_ops = (data_ops_t) {
-	.get_bytes = data_type_none_get_bytes,
-	.get_length = data_type_none_get_length,
-	.get_string = data_type_none_get_string,
-	.set_data = data_type_none_set_data,
-	.free_data = data_type_none_free_data,
-} ;
+void data_type_none_free_data(void * data) ;
 
+bool data_type_none_compare(void * first, void * second) ;

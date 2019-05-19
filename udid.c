@@ -21,7 +21,7 @@ udid_t udid_calculate(struct node * node) {
 	key = rand() ;
 
 	(void)node ;
-	//MurmurHash3_x64_128(node->ops->
+	//MurmurHash3_x64_128(node->data_ops.
 	
 	new = 0 ;	
 	return new ;

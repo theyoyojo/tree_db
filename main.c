@@ -4,6 +4,7 @@
 #include "config.h"
 #include "simple_node.h"
 #include "data_node.h"
+#include "data_type_none.h"
 
 char help_string[] = "Hello there, user. I am " PACKAGE_STRING " but I do not do much yet" ;
 
@@ -206,21 +207,43 @@ TEST_SET(simple_node_tests,
 	) ;
 ) ;
 
-TEST_SET(data_node_basic,
+TEST_SET(data_node_basic_and_none,
 	TEST_CASE(crud,
-		creation_arg_t args = (creation_arg_t){
-			.metadata.data = 0,
-			.data = 0,
-		} ;
-		struct node * test = data_node_create(&args) ;
+		struct node * test = data_node_create_none() ;
+		node_kill(&test) ;
+	) ;
+	TEST_CASE(get_type_default,
+		struct node * test = data_node_create_none() ;
+		
+		char buf[64] ;
+		test->data_ops.get_string(test, buf, 64) ;
+		/* printf("%s\n", buf) ; */
+		ASSERT(!strncmp(buf, data_type_none_get_string_ptr(),
+				data_type_none_get_string_length())) ;
 
+		node_kill(&test) ;
+	) ;
+	TEST_CASE(attempt_set_none,
+		struct node * test = data_node_create_none() ;
+		int random_constant = 0x420beef ;
+		ASSERT(!test->data_ops.set_data(test,&random_constant)) ;
+
+		node_kill(&test) ;
+	) ;
+	TEST_CASE(data_is_zero,
+		struct node * test = data_node_create_none() ;
+		ASSERT(!test->data_ops.compare_data(test->data_ops.get_bytes(test), (void *)&CONST_NONE)) ;
+		node_kill(&test) ;
+	) ;
+	TEST_CASE(size_is_correct,
+		struct node * test = data_node_create_none() ;
+		ASSERT(test->data_ops.get_length(test) == sizeof(none_t)) ;
 		node_kill(&test) ;
 	) ;
 ) ;
 
 
 int main(int argc, char * argv[]) {
-
 	argp_parse(&argp, argc, argv, 0, 0, 0) ;
 	
 	return 0 ;
