@@ -103,10 +103,11 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_tree_db_OBJECTS = tree_db-main.$(OBJEXT) \
-	tree_db-simple_node.$(OBJEXT)
+	tree_db-simple_node.$(OBJEXT) tree_db-data_node.$(OBJEXT) \
+	tree_db-MurmurHash3.$(OBJEXT) tree_db-udid.$(OBJEXT)
 tree_db_OBJECTS = $(am_tree_db_OBJECTS)
 tree_db_LDADD = $(LDADD)
-tree_db_LINK = $(CCLD) $(tree_db_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+tree_db_LINK = $(CCLD) $(tree_db_CFLAGS) $(CFLAGS) $(tree_db_LDFLAGS) \
 	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
@@ -123,8 +124,9 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/tree_db-main.Po \
-	./$(DEPDIR)/tree_db-simple_node.Po
+am__depfiles_remade = ./$(DEPDIR)/tree_db-MurmurHash3.Po \
+	./$(DEPDIR)/tree_db-data_node.Po ./$(DEPDIR)/tree_db-main.Po \
+	./$(DEPDIR)/tree_db-simple_node.Po ./$(DEPDIR)/tree_db-udid.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -274,8 +276,9 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-tree_db_SOURCES = main.c simple_node.c
+tree_db_SOURCES = main.c simple_node.c data_node.c MurmurHash3.c udid.c
 tree_db_CFLAGS = -I./lil_test/src
+tree_db_LDFLAGS = -lm
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -382,8 +385,11 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/tree_db-MurmurHash3.Po # am--include-marker
+include ./$(DEPDIR)/tree_db-data_node.Po # am--include-marker
 include ./$(DEPDIR)/tree_db-main.Po # am--include-marker
 include ./$(DEPDIR)/tree_db-simple_node.Po # am--include-marker
+include ./$(DEPDIR)/tree_db-udid.Po # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -432,6 +438,48 @@ tree_db-simple_node.obj: simple_node.c
 #	$(AM_V_CC)source='simple_node.c' object='tree_db-simple_node.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -c -o tree_db-simple_node.obj `if test -f 'simple_node.c'; then $(CYGPATH_W) 'simple_node.c'; else $(CYGPATH_W) '$(srcdir)/simple_node.c'; fi`
+
+tree_db-data_node.o: data_node.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -MT tree_db-data_node.o -MD -MP -MF $(DEPDIR)/tree_db-data_node.Tpo -c -o tree_db-data_node.o `test -f 'data_node.c' || echo '$(srcdir)/'`data_node.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/tree_db-data_node.Tpo $(DEPDIR)/tree_db-data_node.Po
+#	$(AM_V_CC)source='data_node.c' object='tree_db-data_node.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -c -o tree_db-data_node.o `test -f 'data_node.c' || echo '$(srcdir)/'`data_node.c
+
+tree_db-data_node.obj: data_node.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -MT tree_db-data_node.obj -MD -MP -MF $(DEPDIR)/tree_db-data_node.Tpo -c -o tree_db-data_node.obj `if test -f 'data_node.c'; then $(CYGPATH_W) 'data_node.c'; else $(CYGPATH_W) '$(srcdir)/data_node.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/tree_db-data_node.Tpo $(DEPDIR)/tree_db-data_node.Po
+#	$(AM_V_CC)source='data_node.c' object='tree_db-data_node.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -c -o tree_db-data_node.obj `if test -f 'data_node.c'; then $(CYGPATH_W) 'data_node.c'; else $(CYGPATH_W) '$(srcdir)/data_node.c'; fi`
+
+tree_db-MurmurHash3.o: MurmurHash3.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -MT tree_db-MurmurHash3.o -MD -MP -MF $(DEPDIR)/tree_db-MurmurHash3.Tpo -c -o tree_db-MurmurHash3.o `test -f 'MurmurHash3.c' || echo '$(srcdir)/'`MurmurHash3.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/tree_db-MurmurHash3.Tpo $(DEPDIR)/tree_db-MurmurHash3.Po
+#	$(AM_V_CC)source='MurmurHash3.c' object='tree_db-MurmurHash3.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -c -o tree_db-MurmurHash3.o `test -f 'MurmurHash3.c' || echo '$(srcdir)/'`MurmurHash3.c
+
+tree_db-MurmurHash3.obj: MurmurHash3.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -MT tree_db-MurmurHash3.obj -MD -MP -MF $(DEPDIR)/tree_db-MurmurHash3.Tpo -c -o tree_db-MurmurHash3.obj `if test -f 'MurmurHash3.c'; then $(CYGPATH_W) 'MurmurHash3.c'; else $(CYGPATH_W) '$(srcdir)/MurmurHash3.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/tree_db-MurmurHash3.Tpo $(DEPDIR)/tree_db-MurmurHash3.Po
+#	$(AM_V_CC)source='MurmurHash3.c' object='tree_db-MurmurHash3.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -c -o tree_db-MurmurHash3.obj `if test -f 'MurmurHash3.c'; then $(CYGPATH_W) 'MurmurHash3.c'; else $(CYGPATH_W) '$(srcdir)/MurmurHash3.c'; fi`
+
+tree_db-udid.o: udid.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -MT tree_db-udid.o -MD -MP -MF $(DEPDIR)/tree_db-udid.Tpo -c -o tree_db-udid.o `test -f 'udid.c' || echo '$(srcdir)/'`udid.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/tree_db-udid.Tpo $(DEPDIR)/tree_db-udid.Po
+#	$(AM_V_CC)source='udid.c' object='tree_db-udid.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -c -o tree_db-udid.o `test -f 'udid.c' || echo '$(srcdir)/'`udid.c
+
+tree_db-udid.obj: udid.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -MT tree_db-udid.obj -MD -MP -MF $(DEPDIR)/tree_db-udid.Tpo -c -o tree_db-udid.obj `if test -f 'udid.c'; then $(CYGPATH_W) 'udid.c'; else $(CYGPATH_W) '$(srcdir)/udid.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/tree_db-udid.Tpo $(DEPDIR)/tree_db-udid.Po
+#	$(AM_V_CC)source='udid.c' object='tree_db-udid.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -c -o tree_db-udid.obj `if test -f 'udid.c'; then $(CYGPATH_W) 'udid.c'; else $(CYGPATH_W) '$(srcdir)/udid.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -701,8 +749,11 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-		-rm -f ./$(DEPDIR)/tree_db-main.Po
+		-rm -f ./$(DEPDIR)/tree_db-MurmurHash3.Po
+	-rm -f ./$(DEPDIR)/tree_db-data_node.Po
+	-rm -f ./$(DEPDIR)/tree_db-main.Po
 	-rm -f ./$(DEPDIR)/tree_db-simple_node.Po
+	-rm -f ./$(DEPDIR)/tree_db-udid.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -750,8 +801,11 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-		-rm -f ./$(DEPDIR)/tree_db-main.Po
+		-rm -f ./$(DEPDIR)/tree_db-MurmurHash3.Po
+	-rm -f ./$(DEPDIR)/tree_db-data_node.Po
+	-rm -f ./$(DEPDIR)/tree_db-main.Po
 	-rm -f ./$(DEPDIR)/tree_db-simple_node.Po
+	-rm -f ./$(DEPDIR)/tree_db-udid.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

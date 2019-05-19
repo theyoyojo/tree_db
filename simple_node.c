@@ -41,6 +41,8 @@ struct node * simple_node_create(void * args) {
 	new->free_data = free ;
 	new->create_child = simple_node_create ;
 
+	new->parent = NULL ;
+
 	return  new ;
 }
 

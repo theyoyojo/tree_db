@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "udid.h"
+
 /* Don't do anything on an invalid node that could be risky */
 #define VALIDATE_NODE(msg) ({ \
 		if (!parent->data) { \
@@ -25,6 +27,7 @@ typedef union metadata {
  * but they all must know how to kill themselves and reproduce
  */
 struct node {
+	udid_t 		udid ;
 	void 		*data ;
 	metadata_t 	metadata ;
 
@@ -32,6 +35,7 @@ struct node {
 	struct node 	*last_child ;
 	struct node     *brother ;
 	struct node     *sister ;
+	struct node	*parent ;
 	size_t 		child_count ;
 
 	void		(*kill_self)(struct node **) ;
@@ -222,7 +226,7 @@ inline bool node_push_child(struct node * parent, struct node * child) {
 	bool success_code = true ;
 	struct node * temp ;
 
-	VALIDATE_NODE("simple_node:push_child") ;
+	VALIDATE_NODE("push_child") ;
 	/* case: no child passed to function */
 	if (!child) {
 		success_code = false ;
@@ -244,6 +248,7 @@ inline bool node_push_child(struct node * parent, struct node * child) {
 		/* newly linked, now inserted */
 		temp = parent->last_child ;
 		parent->last_child = child ;
+		child->parent = parent ;
 	}
 
 	if(success_code) {

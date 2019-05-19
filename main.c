@@ -3,12 +3,13 @@
 #include <lil_test.h>
 #include "config.h"
 #include "simple_node.h"
+#include "data_node.h"
 
 char help_string[] = "Hello there, user. I am " PACKAGE_STRING " but I do not do much yet" ;
 
 static struct argp argp = { 0, 0, 0, help_string, 0, 0, 0} ;
 
-TEST_SET(generic_node_tests,
+TEST_SET(simple_node_tests,
 	/* TEST_CASE(fake_test_case, */
 	/* 	(void)0 ; */
 	/* ) ; */
@@ -200,6 +201,18 @@ TEST_SET(generic_node_tests,
 		}
 
 		test->kill_self(&test) ;
+	) ;
+) ;
+
+TEST_SET(data_node_basic,
+	TEST_CASE(crud,
+		creation_arg_t args = (creation_arg_t){
+			.metadata.data = 0,
+			.data = 0,
+		} ;
+		struct node * test = data_node_create(&args) ;
+
+		node_kill(&test) ;
 	) ;
 ) ;
 

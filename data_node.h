@@ -3,23 +3,6 @@
 
 #include "node.h"
 
-/*
-struct node {
-	void 		*data ;
-	void		*metadata ;
-
-	struct node 	*first_child ;
-	struct node 	*last_child ;
-	struct node     *brother ;
-	struct node     *sister ;
-	size_t 		child_count ;
-
-	void		(*free_data)(void *) ;
-	struct node     *(*create_child)(void * args) ;
-} ;
- */
-
-
 typedef struct creation_arg {
 	metadata_t 	metadata ;
 	void 		*data ;	
@@ -27,6 +10,8 @@ typedef struct creation_arg {
 
 struct node * data_node_create(void * args) ;
 
-void data_node_destroy(struct node ** node) ;
+void data_node_kill(struct node ** node) ;
+
+void data_node_print_type(struct node ** node) ;
 
 #endif /* DATA_NODE_H */
