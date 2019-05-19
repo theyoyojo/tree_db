@@ -104,7 +104,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_tree_db_OBJECTS = tree_db-main.$(OBJEXT) \
 	tree_db-simple_node.$(OBJEXT) tree_db-data_node.$(OBJEXT) \
-	tree_db-MurmurHash3.$(OBJEXT) tree_db-udid.$(OBJEXT)
+	tree_db-MurmurHash3.$(OBJEXT) tree_db-udid.$(OBJEXT) \
+	tree_db-node.$(OBJEXT)
 tree_db_OBJECTS = $(am_tree_db_OBJECTS)
 tree_db_LDADD = $(LDADD)
 tree_db_LINK = $(CCLD) $(tree_db_CFLAGS) $(CFLAGS) $(tree_db_LDFLAGS) \
@@ -126,7 +127,8 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/tree_db-MurmurHash3.Po \
 	./$(DEPDIR)/tree_db-data_node.Po ./$(DEPDIR)/tree_db-main.Po \
-	./$(DEPDIR)/tree_db-simple_node.Po ./$(DEPDIR)/tree_db-udid.Po
+	./$(DEPDIR)/tree_db-node.Po ./$(DEPDIR)/tree_db-simple_node.Po \
+	./$(DEPDIR)/tree_db-udid.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -276,7 +278,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-tree_db_SOURCES = main.c simple_node.c data_node.c MurmurHash3.c udid.c
+tree_db_SOURCES = main.c simple_node.c data_node.c MurmurHash3.c udid.c node.c
 tree_db_CFLAGS = -I./lil_test/src
 tree_db_LDFLAGS = -lm
 all: config.h
@@ -388,6 +390,7 @@ distclean-compile:
 include ./$(DEPDIR)/tree_db-MurmurHash3.Po # am--include-marker
 include ./$(DEPDIR)/tree_db-data_node.Po # am--include-marker
 include ./$(DEPDIR)/tree_db-main.Po # am--include-marker
+include ./$(DEPDIR)/tree_db-node.Po # am--include-marker
 include ./$(DEPDIR)/tree_db-simple_node.Po # am--include-marker
 include ./$(DEPDIR)/tree_db-udid.Po # am--include-marker
 
@@ -480,6 +483,20 @@ tree_db-udid.obj: udid.c
 #	$(AM_V_CC)source='udid.c' object='tree_db-udid.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -c -o tree_db-udid.obj `if test -f 'udid.c'; then $(CYGPATH_W) 'udid.c'; else $(CYGPATH_W) '$(srcdir)/udid.c'; fi`
+
+tree_db-node.o: node.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -MT tree_db-node.o -MD -MP -MF $(DEPDIR)/tree_db-node.Tpo -c -o tree_db-node.o `test -f 'node.c' || echo '$(srcdir)/'`node.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/tree_db-node.Tpo $(DEPDIR)/tree_db-node.Po
+#	$(AM_V_CC)source='node.c' object='tree_db-node.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -c -o tree_db-node.o `test -f 'node.c' || echo '$(srcdir)/'`node.c
+
+tree_db-node.obj: node.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -MT tree_db-node.obj -MD -MP -MF $(DEPDIR)/tree_db-node.Tpo -c -o tree_db-node.obj `if test -f 'node.c'; then $(CYGPATH_W) 'node.c'; else $(CYGPATH_W) '$(srcdir)/node.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/tree_db-node.Tpo $(DEPDIR)/tree_db-node.Po
+#	$(AM_V_CC)source='node.c' object='tree_db-node.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tree_db_CFLAGS) $(CFLAGS) -c -o tree_db-node.obj `if test -f 'node.c'; then $(CYGPATH_W) 'node.c'; else $(CYGPATH_W) '$(srcdir)/node.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -752,6 +769,7 @@ distclean: distclean-am
 		-rm -f ./$(DEPDIR)/tree_db-MurmurHash3.Po
 	-rm -f ./$(DEPDIR)/tree_db-data_node.Po
 	-rm -f ./$(DEPDIR)/tree_db-main.Po
+	-rm -f ./$(DEPDIR)/tree_db-node.Po
 	-rm -f ./$(DEPDIR)/tree_db-simple_node.Po
 	-rm -f ./$(DEPDIR)/tree_db-udid.Po
 	-rm -f Makefile
@@ -804,6 +822,7 @@ maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/tree_db-MurmurHash3.Po
 	-rm -f ./$(DEPDIR)/tree_db-data_node.Po
 	-rm -f ./$(DEPDIR)/tree_db-main.Po
+	-rm -f ./$(DEPDIR)/tree_db-node.Po
 	-rm -f ./$(DEPDIR)/tree_db-simple_node.Po
 	-rm -f ./$(DEPDIR)/tree_db-udid.Po
 	-rm -f Makefile

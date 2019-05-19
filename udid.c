@@ -1,4 +1,5 @@
 #include "udid.h"
+#include "node.h"
 
 #include <time.h>
 #include <stdlib.h>
@@ -8,7 +9,7 @@
 /* udid: unique data id */
 static bool first_udid = true ;
 
-udid_t udid_generate(void) {
+udid_t udid_calculate(struct node * node) {
 	udid_t new ;
 	int key ;
 	
@@ -19,7 +20,8 @@ udid_t udid_generate(void) {
 
 	key = rand() ;
 
-	//MurmurHash3_x64_128(
+	(void)node ;
+	//MurmurHash3_x64_128(node->ops->
 	
 	new = 0 ;	
 	return new ;
