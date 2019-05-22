@@ -45,14 +45,14 @@ TEST_SET(simple_node_tests,
 	TEST_CASE(make_one_kill_it,
 		struct node * test = simple_node_create(NULL) ;
 		node_create_child(test, NULL) ;
-		node_kill_child(test,0,1) ;
+		node_kill_child(test,0,1,false) ;
 		node_kill(&test) ;
 	) ;
 	TEST_CASE(make_two_kill_first,
 		struct node * test = simple_node_create(NULL) ;
 		node_create_child(test, NULL) ;
 		node_create_child(test, NULL) ;
-		node_kill_child(test,0,1) ;
+		node_kill_child(test,0,1,false) ;
 		node_kill(&test) ;
 	) ;
 	TEST_CASE(make_two_kill_second,
@@ -60,7 +60,7 @@ TEST_SET(simple_node_tests,
 		node_create_child(test, NULL) ;
 		node_create_child(test, NULL) ;
 
-		node_kill_child(test,1,1) ;
+		node_kill_child(test,1,1,false) ;
 		ASSERT(node_get_child_count(test) == 1) ;
 
 		node_kill(&test) ;
@@ -74,7 +74,7 @@ TEST_SET(simple_node_tests,
 		/* node_print_child_linkage(test, stdout) ; */
 		ASSERT(node_get_child_count(test) == 3) ;
 
-		node_kill_child(test,1,1) ;
+		node_kill_child(test,1,1,false) ;
 		ASSERT(node_get_child_count(test) == 2) ;
 		/* node_print_child_linkage(test, stdout) ; */
 
@@ -89,7 +89,7 @@ TEST_SET(simple_node_tests,
 		/* node_print_child_linkage(test, stdout) ; */
 		ASSERT(node_get_child_count(test) == 3) ;
 
-		node_kill_child(test,2,1) ;
+		node_kill_child(test,2,1,false) ;
 		ASSERT(node_get_child_count(test) == 2) ;
 		/* node_print_child_linkage(test, stdout) ; */
 
@@ -103,7 +103,7 @@ TEST_SET(simple_node_tests,
 
 		/* node_print_child_linkage(test, stdout) ; */
 		ASSERT(node_get_child_count(test) == 3) ;
-		node_kill_child(test,1,2) ;
+		node_kill_child(test,1,2, false) ;
 		/* printf("killed the children\n") ; */
 
 		ASSERT(node_get_child_count(test) == 1) ;
@@ -122,7 +122,7 @@ TEST_SET(simple_node_tests,
 
 		/* node_print_child_linkage(test, stdout) ; */
 
-		node_kill_child(test,2,5) ;
+		node_kill_child(test,2,5, false) ;
 		/* printf("children count = %d\n",test->child_count) ; */
 		ASSERT(test->child_count == 5) ;
 
@@ -149,7 +149,7 @@ TEST_SET(simple_node_tests,
 		ASSERT(test->child_count == 10) ;
 		ASSERT(node_verify_child_count(test)) ;
 
-		node_kill_child(test,3,7) ;
+		node_kill_child(test,3,7,false) ;
 		ASSERT(test->child_count == 3) ;
 		ASSERT(node_verify_child_count(test)) ;
 
@@ -168,7 +168,7 @@ TEST_SET(simple_node_tests,
 		ASSERT(node_verify_sibling_integrity(test)) ;
 
 		/* random murder */
-		node_kill_child(test,100,7) ;
+		node_kill_child(test,100,7,false) ;
 		ASSERT(node_get_child_count(test) == 993) ;
 
 		ASSERT(node_verify_child_count(test)) ;
@@ -224,6 +224,25 @@ TEST_SET(simple_node_tests,
 		simple_node_set_data(second, 1) ;
 
 		ASSERT(first->data_ops.compare_data(first->data,second->data) == 0) ;
+
+		node_kill(&test) ;
+	) ;
+	TEST_CASE(pop_child,
+		struct node * test = simple_node_create(NULL), * second_child ;
+		node_create_child(test, NULL) ;
+		node_create_child(test, NULL) ;
+
+		simple_node_set_data(node_get_child_by_index(test, 1), 10) ;
+
+		ASSERT(node_get_child_count(test) == 2) ;
+
+		second_child = node_pop_child_by_index(test, 1) ;
+
+		ASSERT(node_get_child_count(test) == 1) ;
+		ASSERT(simple_node_get_data(second_child) == 10) ;
+
+		/* the caller is responsible for the memory of a pop'd node */
+		node_kill(&second_child) ;
 
 		node_kill(&test) ;
 	) ;

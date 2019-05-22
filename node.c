@@ -2,10 +2,10 @@
 
 /* had to include a function like this */
 bool node_kill_all_children(struct node * parent) {
-	return node_kill_child(parent, 0, parent->child_count) ;
+	return node_kill_child(parent, 0, parent->child_count, false) ;
 }
 
-bool node_kill_child(struct node * parent, size_t child_index, size_t body_count_limit) {
+bool node_kill_child(struct node * parent, size_t child_index, size_t body_count_limit, bool preserve_memory) {
 	size_t counter = 0, body_count = 0 ;
 	struct node * temp, * child;
 	bool success_code = true ;
@@ -29,7 +29,13 @@ bool node_kill_child(struct node * parent, size_t child_index, size_t body_count
 			 * of their firstborn child.
 			 */
 			if (counter >= child_index) {
-				node_kill(&parent->first_child) ;
+				if (!preserve_memory) {
+					node_kill(&parent->first_child) ;
+				}
+				else {
+					/* the child becomes an orphan but we don't kill it */
+					parent->first_child->parent = NULL ;
+				}
 				parent->first_child = parent->last_child = NULL ;
 				parent->child_count = 0 ;
 				++body_count ;
@@ -57,7 +63,13 @@ bool node_kill_child(struct node * parent, size_t child_index, size_t body_count
 					parent->last_child = child->sister ;
 				}
 				temp = child->brother ;
-				node_kill(&child) ;
+				if (!preserve_memory) {
+					node_kill(&child) ;
+				}
+				else {
+					/* the child becomes an orphan but we don't kill it */
+					child->parent = NULL ;
+				}
 				--parent->child_count ;
 				++body_count ;
 				child = temp ;
@@ -244,4 +256,17 @@ bool node_create_child(struct node * parent, void * args) {
 	}
 
 	return success_code ;
+}
+
+
+struct node * node_pop_child_by_index(struct node * parent, size_t index) {
+	struct node * child ;
+
+	child = node_get_child_by_index(parent, index) ;
+	/* the following call is the reason the option to preserve child memory on a kill was added */
+	if (child) {
+		node_kill_child(parent, index, 1, true) ;
+	}
+
+	return child ;
 }

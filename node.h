@@ -88,6 +88,11 @@ bool node_create_child(struct node * parent, void * args) ;
  */
 bool node_push_child(struct node * parent, struct node * child) ;
 
+/* remove a child node from a list and return it to the caller along
+ * with responsibility for the eventual deallocation of its memory
+ */
+struct node * node_pop_child_by_index(struct node * parent, size_t index) ;
+
 /* access the child list of a parent node as one would an array
  * and return a pointer to the requested node, or NULL if something went wrong
  */
@@ -98,9 +103,12 @@ size_t node_get_child_count(struct node * parent) ;
 
 /* iterate through a parent's child node list, killing all after a certain index
  * until either all children have been killed or the body count limit has been
- * reached
+ * reached. If preserve children is true, the memory associated with the killed
+ * children will not be free'd. This is useful if one wished to move a child node
+ * to a different parent.
+ * FIXME: this is only index based but I should have support for kill_child_by_udid as well
  */
-bool node_kill_child(struct node * parent, size_t child_index, size_t body_count_limit) ;
+bool node_kill_child(struct node * parent, size_t child_index, size_t body_count_limit, bool preserve_memory) ;
 
 /* free all data associated with a parent's child node list and set all pointers to
  * that list to NULL
