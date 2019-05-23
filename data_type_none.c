@@ -2,20 +2,29 @@
 
 const none_t CONST_NONE = 0 ;
 
-const creation_arg_t NONE_ARGS = (creation_arg_t){
-	.metadata.data = 0,
-	.data = (void *)&CONST_NONE,
+#define NONE_ARGS  (creation_arg_t) { \
+	.metadata.data = 0, \
+	.data = (void *)&CONST_NONE, \
 } ;
 
 
-const data_ops_t data_type_none_ops = (data_ops_t) {
-	.get_bytes = 	data_type_none_get_bytes,
-	.get_length = 	data_type_none_get_length,
-	.get_string = 	data_type_none_get_string,
-	.set_data = 	data_type_none_set_data,
-	.free_data = 	data_type_none_free_data,
-	.compare_data = data_type_none_compare,
+#define data_type_none_ops (data_ops_t) { \
+	.get_bytes = 	data_type_none_get_bytes, \
+	.get_length = 	data_type_none_get_length, \
+	.get_string = 	data_type_none_get_string, \
+	.set_data = 	data_type_none_set_data, \
+	.free_data = 	data_type_none_free_data, \
+	.compare_data = data_type_none_compare, \
 } ;
+
+
+creation_arg_t data_type_none_get_none_args(void) {
+	return NONE_ARGS ;
+}
+
+data_ops_t data_type_none_get_data_type_none_ops(void) {
+	return data_type_none_ops ;
+}
 
 const char data_type_none_string[] = "[NONE]" ;
 

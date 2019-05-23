@@ -13,7 +13,7 @@ struct node * data_node_create(void * args) {
 		.data = 	creation_args->data,
 		.metadata = 	creation_args->metadata,
 		// This should be changed to do lookup based on metadata
-		.data_ops = 	data_type_none_ops,
+		.data_ops = 	data_type_none_get_data_type_none_ops(),
 		.first_child = 	NULL,
 		.last_child = 	NULL,
 		.brother = 	NULL,
@@ -30,7 +30,8 @@ struct node * data_node_create(void * args) {
 }
 
 struct node * data_node_create_none(void) {
-	return data_node_create((void *)&NONE_ARGS) ;
+	creation_arg_t args = data_type_none_get_none_args() ;
+	return data_node_create((void *)&args) ;
 }
 
 #define SMALL_BUFLEN 64

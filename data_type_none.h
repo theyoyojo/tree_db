@@ -5,9 +5,8 @@
 
 typedef unsigned long long int none_t ;
 
-/* constants */
-const creation_arg_t NONE_ARGS ;
-const data_ops_t data_type_none_ops ;
+creation_arg_t data_type_none_get_none_args(void) ;
+data_ops_t data_type_none_get_data_type_none_ops(void) ;
 
 const none_t CONST_NONE ;
 
