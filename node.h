@@ -5,7 +5,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+struct node ;
+
 #include "udid.h"
+#include "metadata.h"
 
 /* Don't do anything on an invalid node that could be risky */
 #define VALIDATE_NODE(msg) ({ \
@@ -16,13 +19,6 @@
 	}) ; \
 
 
-struct node ;
-
-typedef union metadata {
-	char 		info[8] ;
-	long long	data ;
-} metadata_t ;
-
 /* these are the operations of must expect to be able to perform on
  * a nodes data
  */
@@ -30,7 +26,7 @@ typedef struct node_data_ops {
 	void 		*(*get_bytes)(struct node *) ;
 	size_t		(*get_length)(struct node *) ;
 	bool		(*get_string)(struct node *, char * buf, size_t buflen) ;
-	bool		(*set_data)(struct node *, void * data) ;
+	bool		(*set_data)(struct node *, void * data, size_t size) ;
 	void		(*free_data)(void *) ;
 	int 		(*compare_data)(void * first, void * second) ;
 } data_ops_t ;

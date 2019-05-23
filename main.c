@@ -5,6 +5,7 @@
 #include "simple_node.h"
 #include "data_node.h"
 #include "data_type_none.h"
+#include "metadata.h"
 
 char help_string[] = "Hello there, user. I am " PACKAGE_STRING " but I do not do much yet" ;
 
@@ -259,7 +260,7 @@ TEST_SET(data_node_basic_and_none,
 		char buf[64] ;
 		test->data_ops.get_string(test, buf, 64) ;
 		/* printf("%s\n", buf) ; */
-		ASSERT(!strncmp(buf, data_type_none_get_string_ptr(),
+		ASSERT(!strncmp(buf, data_type_none_get_string_bytes(),
 				data_type_none_get_string_length())) ;
 
 		node_kill(&test) ;
@@ -267,7 +268,7 @@ TEST_SET(data_node_basic_and_none,
 	TEST_CASE(attempt_set_none,
 		struct node * test = data_node_create_none() ;
 		int random_constant = 0x420beef ;
-		ASSERT(!test->data_ops.set_data(test,&random_constant)) ;
+		ASSERT(!test->data_ops.set_data(test,&random_constant,0)) ;
 
 		node_kill(&test) ;
 	) ;
@@ -281,6 +282,46 @@ TEST_SET(data_node_basic_and_none,
 		struct node * test = data_node_create_none() ;
 		ASSERT(test->data_ops.get_length(test) == sizeof(none_t)) ;
 		node_kill(&test) ;
+	) ;
+	TEST_CASE(get_hash_of_default,
+		struct node * test = data_node_create_none() ;
+		udid_print_value(test->udid, stdout) ;
+		udid_print_table(test->udid, stdout) ;
+		node_kill(&test) ;
+	) ;
+) ;
+
+char lorem_ipsum[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam erat leo, hendrerit et orci a, congue accumsan quam. Sed sodales accumsan neque at gravida. Nam molestie ante dapibus purus convallis sollicitudin. Nulla nec leo imperdiet eros feugiat rutrum non non orci. Maecenas eu risus vitae ipsum suscipit vehicula. Nam commodo ipsum a sem semper egestas. Duis vel ante velit. Suspendisse mollis ligula sed tellus tincidunt, at mollis eros tincidunt. Sed ultrices vulputate elit et interdum. Morbi efficitur lacinia metus, sit amet laoreet leo. Etiam fermentum luctus eros." ;
+
+TEST_SET(udid,
+	TEST_CASE(random,
+		char a[] = "aasdfasdfasdfasajsdkfajslkdfsjdfhalksdjfalsd" ;
+		udid_t test ;
+		test = udid_calculate(a, sizeof(a)) ;
+	) ;
+	TEST_CASE(lorem_compare,
+		udid_t test, test2 ;
+		test = udid_calculate(lorem_ipsum, sizeof(lorem_ipsum)) ;
+		test2 = udid_calculate(lorem_ipsum, sizeof(lorem_ipsum)) ;
+
+		ASSERT(udid_compare(test, test2) == true) ;
+	) ;
+	TEST_CASE(lorem_compare_different,
+		udid_t test, test2 ;
+		test = udid_calculate(lorem_ipsum, sizeof(lorem_ipsum)) ;
+		test2 = udid_calculate(lorem_ipsum, sizeof(lorem_ipsum) - 1) ;
+
+		ASSERT(udid_compare(test, test2) == false) ;
+	) ;
+
+	
+) ;
+
+TEST_SET(metadata,
+	TEST_CASE(set_type,
+		metadata_t test ;
+		metadata_set_data_type(&test, DATA_TYPE_TEXT) ;
+		ASSERT(metadata_get_data_type(test) == DATA_TYPE_TEXT) ;
 	) ;
 ) ;
 

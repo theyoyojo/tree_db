@@ -8,6 +8,15 @@ const creation_arg_t NONE_ARGS = (creation_arg_t){
 } ;
 
 
+const data_ops_t data_type_none_ops = (data_ops_t) {
+	.get_bytes = 	data_type_none_get_bytes,
+	.get_length = 	data_type_none_get_length,
+	.get_string = 	data_type_none_get_string,
+	.set_data = 	data_type_none_set_data,
+	.free_data = 	data_type_none_free_data,
+	.compare_data = data_type_none_compare,
+} ;
+
 const char data_type_none_string[] = "[NONE]" ;
 
 const none_t data_type_none_bytes = 0 ;
@@ -30,9 +39,9 @@ bool data_type_none_get_string(struct node * node, char * buf, size_t buflen) {
 	return strcmp(buf, data_type_none_string) == 0 ;
 }
 
-bool data_type_none_set_data(struct node * node, void * data) {
+bool data_type_none_set_data(struct node * node, void * data, size_t size) {
 	/* this data type is immutable */
-	(void)node, (void)data ;
+	(void)node, (void)data, (void)size ;
 	return false ;
 }
 
@@ -42,16 +51,7 @@ void data_type_none_free_data(void * data) {
 	return ;
 }
 
-const data_ops_t data_type_none_ops = (data_ops_t) {
-	.get_bytes = 	data_type_none_get_bytes,
-	.get_length = 	data_type_none_get_length,
-	.get_string = 	data_type_none_get_string,
-	.set_data = 	data_type_none_set_data,
-	.free_data = 	data_type_none_free_data,
-	.compare_data = data_type_none_compare,
-} ;
-
-char * data_type_none_get_string_ptr(void) {
+char * data_type_none_get_string_bytes(void) {
 	return (char *)data_type_none_string ;
 }
 

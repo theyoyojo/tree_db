@@ -1,34 +1,35 @@
 #include "udid.h"
-#include "node.h"
 
 #include <time.h>
 #include <stdlib.h>
 
-#define SRAND_CONSTANT 0xdeadbeefU /* why not? */
+#include "MurmurHash3.h"
+
+#define SEED_CONSTANT 0xdeadbeefU /* why not? */
 
 /* udid: unique data id */
-static bool first_udid = true ;
 
-udid_t udid_calculate(struct node * node) {
+udid_t 	udid_calculate(void * bytes, size_t length){
 	udid_t new ;
-	int key ;
-	
-	if (first_udid) {
-		srand(SRAND_CONSTANT) ;
-		first_udid = false ;
-	}
 
-	key = rand() ;
-
-	(void)node ;
-	//MurmurHash3_x64_128(node->data_ops.
+	MurmurHash3_x64_128(bytes, (int)length, SEED_CONSTANT, (void *)&new) ;
 	
-	new = 0 ;	
 	return new ;
 }
 
-int udid_compare(udid_t first, udid_t second) {
-	// TODO
-	(void)first, (void)second ;
-	return true ;
+bool udid_compare(udid_t first, udid_t second) {
+	return first.value == second.value ;
+}
+
+void udid_print_table(udid_t udid, FILE * file) {
+	for (int i = 0; i < 16; ++i) {
+		if (i % 4 == 0) fprintf(file, "%x:\t", i) ;
+		fprintf(file,"%02hhx ", udid.bytes[i]) ;
+		if (i % 4 == 3) fprintf(file, "\n") ;
+	}
+}
+
+void udid_print_value(udid_t udid, FILE * file) {
+	fprintf(file, "%llu + %llu * 2^8 \n", *(unsigned long long int *)&udid.bytes,
+	 *(unsigned long long int *)&(udid.bytes[8])) ;
 }

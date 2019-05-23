@@ -41,7 +41,7 @@ struct node * simple_node_create(void * args) {
 		.get_length = LAMBDA(size_t, (struct node * node){return sizeof(int);} ),
 		.get_string = LAMBDA(bool, (struct node * node, char * buf, size_t buflen)
 				{ return snprintf(buf, buflen, "%d", new->data) > 0 ;}),
-		.set_data = LAMBDA(bool, (struct node * node, void * data)
+		.set_data = LAMBDA(bool, (struct node * node, void * data, size_t size)
 				{ if (!data) return false ;
 				*(int*)new->data = *(int*)data ; return true ;}),
 		.free_data = free,

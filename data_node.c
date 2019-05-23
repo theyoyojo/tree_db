@@ -23,6 +23,9 @@ struct node * data_node_create(void * args) {
 		.create_child = data_node_create,
 	} ;
 
+	new->udid = udid_calculate(new->data_ops.get_bytes(new),
+			new->data_ops.get_length(new)) ;
+
 	return new ;
 }
 
