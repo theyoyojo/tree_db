@@ -4,3 +4,6 @@ basically it's a tree saved on the hard drive
 then it's loaded and manipulated
 then saved
 ez
+
+
+note: tests require CFLAGS+= --std=gnu11
