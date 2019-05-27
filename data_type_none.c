@@ -26,7 +26,7 @@ data_ops_t data_type_none_get_data_type_none_ops(void) {
 	return data_type_none_ops ;
 }
 
-const char data_type_none_string[] = "[NONE]" ;
+#define DATA_TYPE_NONE_STRING "<NONE>"
 
 const none_t data_type_none_bytes = 0 ;
 
@@ -44,8 +44,8 @@ size_t data_type_none_get_length(struct node * node) {
 
 bool data_type_none_get_string(struct node * node, char * buf, size_t buflen) {
 	(void)node ;
-	strncpy(buf, data_type_none_string, buflen) ;
-	return strcmp(buf, data_type_none_string) == 0 ;
+	strncpy(buf, DATA_TYPE_NONE_STRING, buflen) ;
+	return strcmp(buf, DATA_TYPE_NONE_STRING) == 0 ;
 }
 
 bool data_type_none_set_data(struct node * node, void * data, size_t size) {
@@ -61,11 +61,11 @@ void data_type_none_free_data(void * data) {
 }
 
 char * data_type_none_get_string_bytes(void) {
-	return (char *)data_type_none_string ;
+	return (char *)DATA_TYPE_NONE_STRING ;
 }
 
 size_t data_type_none_get_string_length(void) {
-	return sizeof(data_type_none_string) ;
+	return sizeof(DATA_TYPE_NONE_STRING) ;
 }
 
 /* this function should always return zero  */
