@@ -26,9 +26,10 @@ typedef struct node_data_ops {
 	void 		*(*get_bytes)(struct node *) ;
 	size_t		(*get_length)(struct node *) ;
 	bool		(*get_string)(struct node *, char * buf, size_t buflen) ;
-	bool		(*set_data)(struct node *, void * data, size_t size) ;
-	void		(*free_data)(void *) ;
-	int 		(*compare_data)(void * first, void * second) ;
+	bool		(*set)(struct node *, void * data, size_t size) ;
+	void		(*free)(void *) ;
+	int 		(*compare)(void * first, void * second) ;
+	bool		(*swap)(void * first, void * second) ;
 } data_ops_t ;
 
 /* this is the core building block of the database

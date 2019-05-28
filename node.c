@@ -162,7 +162,7 @@ bool node_has_parent(struct node * node) {
 void node_kill(struct node ** node) {
 	if (node && *node) {
 		node_kill_all_children(*node) ;
-		if ((*node)->data) (*node)->data_ops.free_data((*node)->data) ;
+		if ((*node)->data) (*node)->data_ops.free((*node)->data) ;
 		free(*node) ;
 		*node = NULL ;
 	}

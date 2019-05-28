@@ -21,9 +21,9 @@ TEST_SET(simple_node_tests,
 	) ;
 	TEST_CASE(get_and_set_data,
 		struct node * test = simple_node_create(NULL) ;
-		ASSERT(simple_node_get_data(test) == 0) ;
-		simple_node_set_data(test,4) ;
-		ASSERT(simple_node_get_data(test) == 4) ;
+		ASSERT(simple_node_get_int(test) == 0) ;
+		simple_node_set_int(test,4) ;
+		ASSERT(simple_node_get_int(test) == 4) ;
 		node_kill(&test) ;
 	) ;
 	TEST_CASE(add_children,
@@ -190,8 +190,8 @@ TEST_SET(simple_node_tests,
 		node_create_child(test,NULL) ;
 		child = node_get_child_by_index(test, 0) ;
 
-		simple_node_set_data(child, 9) ;
-		ASSERT(simple_node_get_data(child) == 9) ;
+		simple_node_set_int(child, 9) ;
+		ASSERT(simple_node_get_int(child) == 9) ;
 
 		node_kill(&test) ;
 	) ;
@@ -213,18 +213,18 @@ TEST_SET(simple_node_tests,
 		first = node_get_child_by_index(test, 0) ;
 		second = node_get_child_by_index(test, 1) ;
 
-		ASSERT(first->data_ops.compare_data(first->data,second->data) == 0) ;
+		ASSERT(first->data_ops.compare(first->data,second->data) == 0) ;
 
-		simple_node_set_data(first, 4) ;
-		simple_node_set_data(second, 3) ;
-		ASSERT(first->data_ops.compare_data(first->data,second->data) == 1) ;
+		simple_node_set_int(first, 4) ;
+		simple_node_set_int(second, 3) ;
+		ASSERT(first->data_ops.compare(first->data,second->data) == 1) ;
 
-		simple_node_set_data(first, 1) ;
+		simple_node_set_int(first, 1) ;
 
-		ASSERT(first->data_ops.compare_data(first->data,second->data) == -2) ;
-		simple_node_set_data(second, 1) ;
+		ASSERT(first->data_ops.compare(first->data,second->data) == -2) ;
+		simple_node_set_int(second, 1) ;
 
-		ASSERT(first->data_ops.compare_data(first->data,second->data) == 0) ;
+		ASSERT(first->data_ops.compare(first->data,second->data) == 0) ;
 
 		node_kill(&test) ;
 	) ;
@@ -233,14 +233,14 @@ TEST_SET(simple_node_tests,
 		node_create_child(test, NULL) ;
 		node_create_child(test, NULL) ;
 
-		simple_node_set_data(node_get_child_by_index(test, 1), 10) ;
+		simple_node_set_int(node_get_child_by_index(test, 1), 10) ;
 
 		ASSERT(node_get_child_count(test) == 2) ;
 
 		second_child = node_pop_child_by_index(test, 1) ;
 
 		ASSERT(node_get_child_count(test) == 1) ;
-		ASSERT(simple_node_get_data(second_child) == 10) ;
+		ASSERT(simple_node_get_int(second_child) == 10) ;
 
 		/* the caller is responsible for the memory of a pop'd node */
 		node_kill(&second_child) ;
@@ -268,13 +268,13 @@ TEST_SET(data_node_basic_and_none,
 	TEST_CASE(attempt_set_none,
 		struct node * test = data_node_create_none() ;
 		int random_constant = 0x420beef ;
-		ASSERT(!test->data_ops.set_data(test,&random_constant,0)) ;
+		ASSERT(!test->data_ops.set(test,&random_constant,0)) ;
 
 		node_kill(&test) ;
 	) ;
 	TEST_CASE(data_is_zero,
 		struct node * test = data_node_create_none() ;
-		ASSERT(test->data_ops.compare_data(
+		ASSERT(test->data_ops.compare(
 			test->data_ops.get_bytes(test), (void *)&CONST_NONE) == 0) ;
 		node_kill(&test) ;
 	) ;
@@ -288,6 +288,15 @@ TEST_SET(data_node_basic_and_none,
 		udid_print_value(test->udid, stdout) ;
 		udid_print_table(test->udid, stdout) ;
 		node_kill(&test) ;
+	) ;
+	TEST_CASE(swap,
+		struct node * test = data_node_create_none() ;
+		struct node * test2 = data_node_create_none() ;
+
+		ASSERT(test->data_ops.swap(test->data, test2->data) == true) ;
+
+		node_kill(&test) ;
+		node_kill(&test2) ;
 	) ;
 ) ;
 

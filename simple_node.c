@@ -41,11 +41,11 @@ struct node * simple_node_create(void * args) {
 		.get_length = LAMBDA(size_t, (struct node * node){return sizeof(int);} ),
 		.get_string = LAMBDA(bool, (struct node * node, char * buf, size_t buflen)
 				{ return snprintf(buf, buflen, "%d", new->data) > 0 ;}),
-		.set_data = LAMBDA(bool, (struct node * node, void * data, size_t size)
+		.set = LAMBDA(bool, (struct node * node, void * data, size_t size)
 				{ if (!data) return false ;
 				*(int*)new->data = *(int*)data ; return true ;}),
-		.free_data = free,
-		.compare_data = LAMBDA(int,(void * first, void * second)
+		.free = free,
+		.compare = LAMBDA(int,(void * first, void * second)
 				{ return *(int *)first - *(int *)second ; }),
 	} ;
 
@@ -54,9 +54,9 @@ struct node * simple_node_create(void * args) {
 	return  new ;
 }
 
-int simple_node_get_data(struct node * parent) {
+int simple_node_get_int(struct node * parent) {
 	return *(int*)parent->data ;
 }
-void simple_node_set_data(struct node * parent, int data) {
+void simple_node_set_int(struct node * parent, int data) {
 	*(int*)parent->data = data ;
 }

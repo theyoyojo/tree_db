@@ -13,14 +13,18 @@ size_t data_type_text_get_length(struct node * node) ;
 
 bool data_type_text_get_string(struct node * node, char * buf, size_t buflen) ;
 
-bool data_type_text_set_data(struct node * node, void * data, size_t size) ;
+// TODO consider whether this function is a good idea
+bool data_type_text_set(struct node * node, void * data, size_t size) ;
 
-void data_type_text_free_data(void * data) ;
+void data_type_text_free(void * data) ;
 
 int data_type_text_compare(void * first, void * second) ;
+
+bool data_type_text_swap(void * first, void * second) ;
 
 /* data_type_text specific interface */
 
 bool data_type_text_concatenate(struct node * append_to_me, struct node * append_me) ;
+
 
 #endif /* DATA_TYPE_TEXT_H */
